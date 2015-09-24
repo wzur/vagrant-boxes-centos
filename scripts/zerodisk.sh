@@ -1,5 +1,13 @@
+#!/bin/bash
+
 # Zero out the free space to save space in the final image:
-dd if=/dev/zero of=/EMPTY bs=1M || true
+dd if=/dev/zero of=/EMPTY bs=1M
 rm -f /EMPTY
-sleep 15
+
+# Sync to ensure that the delete completes before this moves on.
+sync
+sync
+sync
+
+# additionally show the disk usage
 df -h
