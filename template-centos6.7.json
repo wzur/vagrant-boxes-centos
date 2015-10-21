@@ -1,4 +1,4 @@
-{
+  {
     "push": {
       "name": "",
       "vcs": true
@@ -6,7 +6,8 @@
     "variables": {
         "atlas_username": "{{env `ATLAS_USERNAME`}}",
         "atlas_name": "{{env `ATLAS_NAME`}}",
-        "atlas_token": "{{env `ATLAS_TOKEN`}}"
+        "atlas_token": "{{env `ATLAS_TOKEN`}}",
+        "version": "0.0.3"
     },
     "provisioners": [
         {
@@ -24,6 +25,9 @@
                 "virtualbox-iso": {
                     "execute_command": "echo 'vagrant'|sudo -S bash '{{.Path}}'"
                 },
+                "qemu": {
+                    "execute_command": "echo 'vagrant'|sudo -S bash '{{.Path}}'"
+                },
                 "vmware-iso": {
                     "execute_command": "echo 'vagrant'|sudo -S bash '{{.Path}}'"
                 }
@@ -34,7 +38,7 @@
         {
             "type": "virtualbox-iso",
             "boot_command": [
-                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `atlas_name`}}.cfg<enter><wait>"
             ],
             "boot_wait": "10s",
             "disk_size": 20480,
@@ -52,9 +56,28 @@
             "virtualbox_version_file": ".vbox_version"
         },
         {
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "boot_command": [
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `atlas_name`}}.cfg<enter><wait>"
+            ],
+            "boot_wait": "2s",
+            "disk_size": 20480,
+            "http_directory": "http",
+            "iso_checksum": "171ce654ec06040d096daf75934ca8ca",
+            "iso_checksum_type": "md5",
+            "iso_url": "http://mirrors.clouvider.net/CentOS/6.7/isos/x86_64/CentOS-6.7-x86_64-netinstall.iso",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S bash 'shutdown.sh'"
+        },
+        {
             "type": "vmware-iso",
             "boot_command": [
-                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `atlas_name`}}.cfg<enter><wait>"
             ],
             "boot_wait": "10s",
             "disk_size": 20480,
@@ -86,7 +109,19 @@
             "metadata": {
                 "provider": "vmware_desktop",
                 "description": "Base CentOS 6.7 with guest addition (64bit)",
-                "version": "0.0.2"
+                "version": "{{user `version`}}"
+            }
+        },
+        {
+            "type": "atlas",
+            "token": "{{user `atlas_token`}}",
+            "only": ["qemu"],
+            "artifact": "{{user `atlas_username`}}/{{user `atlas_name`}}",
+            "artifact_type": "vagrant.box",
+            "metadata": {
+                "provider": "libvirt",
+                "description": "Base CentOS 6.7 (64bit)",
+                "version": "{{user `version`}}"
             }
         },
         {
@@ -98,7 +133,7 @@
             "metadata": {
                 "provider": "virtualbox",
                 "description": "Base CentOS 6.7 with guest addition (64bit)",
-                "version": "0.0.2"
+                "version": "{{user `version`}}"
             }
         }]
     ]
