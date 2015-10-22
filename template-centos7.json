@@ -1,4 +1,5 @@
   {
+    "description": "Create Vagrant boxes for CentOS7",
     "push": {
       "name": "",
       "vcs": true
