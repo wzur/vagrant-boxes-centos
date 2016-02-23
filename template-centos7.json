@@ -1,5 +1,5 @@
   {
-    "description": "Create Vagrant boxes for CentOS7",
+    "description": "Create Vagrant boxes for CentOS (7.2)",
     "push": {
       "name": "",
       "vcs": true
@@ -8,7 +8,10 @@
         "atlas_username": "{{env `ATLAS_USERNAME`}}",
         "atlas_name": "{{env `ATLAS_NAME`}}",
         "atlas_token": "{{env `ATLAS_TOKEN`}}",
-        "version": "0.0.1"
+        "version": "0.0.2",
+        "iso_checksum": "99d305fa40ec9e28ef8450c3bcc45f85",
+        "iso_checksum_type": "md5",
+        "iso_url": "http://mirrors.clouvider.net/CentOS/7.2.1511/isos/x86_64/CentOS-7-x86_64-NetInstall-1511.iso"
     },
     "provisioners": [
         {
@@ -42,12 +45,12 @@
                 "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `atlas_name`}}.cfg<enter><wait>"
             ],
             "boot_wait": "10s",
-            "disk_size": 20480,
+            "disk_size": 8192,
             "guest_os_type": "RedHat_64",
             "http_directory": "http",
-            "iso_checksum": "111379a06402e1e445c6aeee9401d031",
-            "iso_checksum_type": "md5",
-            "iso_url": "http://mirrors.clouvider.net/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
+            "iso_checksum": "{{ user `iso_checksum`}}",
+            "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+            "iso_url": "{{ user `iso_url` }}",
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "ssh_port": 22,
@@ -64,11 +67,11 @@
                 "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `atlas_name`}}.cfg<enter><wait>"
             ],
             "boot_wait": "2s",
-            "disk_size": 20480,
+            "disk_size": 8192,
             "http_directory": "http",
-            "iso_checksum": "111379a06402e1e445c6aeee9401d031",
-            "iso_checksum_type": "md5",
-            "iso_url": "http://mirrors.clouvider.net/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
+            "iso_checksum": "{{ user `iso_checksum`}}",
+            "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+            "iso_url": "{{ user `iso_url` }}",
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "ssh_port": 22,
@@ -81,12 +84,12 @@
                 "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `atlas_name`}}.cfg<enter><wait>"
             ],
             "boot_wait": "10s",
-            "disk_size": 20480,
+            "disk_size": 8192,
             "guest_os_type": "RedHat-64",
             "http_directory": "http",
-            "iso_checksum": "111379a06402e1e445c6aeee9401d031",
-            "iso_checksum_type": "md5",
-            "iso_url": "http://mirrors.clouvider.net/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
+            "iso_checksum": "{{ user `iso_checksum`}}",
+            "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+            "iso_url": "{{ user `iso_url` }}",
             "skip_compaction": true,
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
@@ -99,6 +102,7 @@
     "post-processors": [
         [{
             "type": "vagrant",
+            "output": "centos7_{{.BuildName}}_{{.Provider}}_{{ user `version`}}.box",
             "keep_input_artifact": false
         },
         {
@@ -109,7 +113,7 @@
             "artifact_type": "vagrant.box",
             "metadata": {
                 "provider": "vmware_desktop",
-                "description": "Base CentOS 7 with guest addition (64bit)",
+                "description": "Base CentOS (7.2) with guest addition (64bit)",
                 "version": "{{user `version`}}"
             }
         },
@@ -121,7 +125,7 @@
             "artifact_type": "vagrant.box",
             "metadata": {
                 "provider": "libvirt",
-                "description": "Base CentOS 7 (64bit)",
+                "description": "Base CentOS (7.2) (64bit)",
                 "version": "{{user `version`}}"
             }
         },
@@ -133,7 +137,7 @@
             "artifact_type": "vagrant.box",
             "metadata": {
                 "provider": "virtualbox",
-                "description": "Base CentOS 7 with guest addition (64bit)",
+                "description": "Base CentOS (7.2) with guest addition for VirtualBox (64bit)",
                 "version": "{{user `version`}}"
             }
         }]
