@@ -6,5 +6,5 @@ and publish them to [Atlas](https://atlas.hashicorp.com)
 * Packer
 * VirtualBox >= 4.3.26
 * Environment variables
-** `ATLAS_USERNAME`: the Atlas user name
-** `ATLAS_TOKEN`: the authorisation token obtained from Atlas
+  * `ATLAS_USERNAME`: the Atlas user name
+  * `ATLAS_TOKEN`: the authorisation token obtained from Atlas
